@@ -31,8 +31,9 @@ def wpa_settings():
 def save_credentials():
     ssid = request.form['ssid']
     wifi_key = request.form['wifi_key']
+    username = request.form['username']
 
-    create_wpa_supplicant(ssid, wifi_key)
+    create_wpa_supplicant(ssid, username, wifi_key)
     
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
@@ -84,29 +85,81 @@ def scan_wifi_networks():
 
     return ap_array
 
-def create_wpa_supplicant(ssid, wifi_key):
-    temp_conf_file = open('wpa_supplicant.conf.tmp', 'w')
+# def create_wpa_supplicant(ssid, wifi_key):
+#     temp_conf_file = open('wpa_supplicant.conf.tmp', 'w')
+
+#     temp_conf_file.write('ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
+#     temp_conf_file.write('update_config=1\n')
+#     temp_conf_file.write('\n')
+#     temp_conf_file.write('network={\n')
+#     temp_conf_file.write('	ssid="' + ssid + '"\n')
+
+#     if wifi_key == '':
+#         temp_conf_file.write('	key_mgmt=NONE\n')
+#     else:
+#         temp_conf_file.write('	psk="' + wifi_key + '"\n')
+
+#     temp_conf_file.write('	}')
+
+#     temp_conf_file.close
+
+#     os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
+
+
+
+
+def create_wpa_supplicant(ssid, username, wifi_key):
+    
+    temp_conf_file = open('/etc/wpa_supplicant/wpa_supplicant.conf', 'w')
 
     temp_conf_file.write('ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
     temp_conf_file.write('update_config=1\n')
     temp_conf_file.write('\n')
-    temp_conf_file.write('network={\n')
-    temp_conf_file.write('	ssid="' + ssid + '"\n')
 
-    if wifi_key == '':
-        temp_conf_file.write('	key_mgmt=NONE\n')
-    else:
-        temp_conf_file.write('	psk="' + wifi_key + '"\n')
+    # change to a new wifi (PAWS-Secure is default) in our campus 
+    # ssid is actually the user name 
+    if ssid == 'PAWS-Secure':
+        temp_conf_file.write('network={\n')
+        temp_conf_file.write('	ssid="PAWS-Secure"\n')
+        temp_conf_file.write('     eap=PEAP\n')
+        temp_conf_file.write('     key_mgmt=WPA-EAP\n')
+        temp_conf_file.write('     phase2="auth=MSCHAPV2"\n')
+        temp_conf_file.write('	identity="' + username + '"\n')
+        if wifi_key == '':
+            temp_conf_file.write('	key_mgmt=NONE\n')
+        else:
+            temp_conf_file.write('	password="' + wifi_key + '"\n')
+            temp_conf_file.write('	priority=2\n')
+        temp_conf_file.write('	}\n\n')
+    
+    elif username == 'none': 
+        temp_conf_file.write('network={\n')
+        temp_conf_file.write('	ssid="' + ssid + '"\n')
+        if wifi_key == '':
+            temp_conf_file.write('	key_mgmt=NONE\n')
+        else:
+            temp_conf_file.write('	psk="' + wifi_key + '"\n')
+            temp_conf_file.write('	priority=2\n')
+        temp_conf_file.write('	}\n\n')
+
+
+    # use "sensorweb" as a back up wifi
+    temp_conf_file.write('network={\n')
+    temp_conf_file.write('	ssid="sensorweb"\n')
+    temp_conf_file.write('	psk="sensorweb128"\n')
+    temp_conf_file.write('	priority=1\n')
 
     temp_conf_file.write('	}')
-
-    temp_conf_file.close
+    temp_conf_file.close()
 
     os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
 
+
+
+
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
-    os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')
+    os.system('rm /etc/cron.raspiwifi/')
     os.system('cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/')
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
     os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
