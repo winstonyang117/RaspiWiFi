@@ -7,13 +7,13 @@ a Chromecast or similar device can be configured).
 It can also be used as a method to connect wirelessly point-to-point with your
 Pi when a network is not available or you do not want to connect to one. Just
 leave it in Configuration Mode, connect to the "RaspiWiFi[xxxx] Setup" access
-point. The Pi will be addressable at 10.0.0.1 using all the normal methods you
+point. The Pi will be addressable at 10.0.0.1 **(static IP address)** using all the normal methods you
 might use while connected through a network.
 
 RaspiWiFi has been
 tested with the Raspberry Pi B+, Raspberry Pi 3, and Raspberry Pi Zero W.
 
-
+**Make sure each time after you revise the code, run "uninstall.py" then "initial_setup.py" to update the changes.**
 
 OS IMAGE USAGE:
 
