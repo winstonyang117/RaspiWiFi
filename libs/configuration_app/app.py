@@ -185,7 +185,7 @@ def create_wpa_supplicant(ssid, username, wifi_key):
 
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
-    os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')      ############################   if don't add "aphost_bootstrapper", it will have bugs. Because sometimes there are 2 files under "cron.raspiwifi". 
+    os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')      ##########################  if don't add "aphost_bootstrapper", it will have bugs. Because sometimes there are 2 files under "cron.raspiwifi". 
     os.system('cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/')
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
     os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
