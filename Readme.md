@@ -7,15 +7,10 @@ It can also be used as a method to connect wirelessly point-to-point with your P
 
 RaspiWiFi has been tested with the Raspberry Pi B+, Raspberry Pi 3, and Raspberry Pi Zero W.
 
-**Make sure each time after you revise the code, run "uninstall.py" then "initial_setup.py" to update the changes.**
-
-
 ### OS IMAGE USAGE:
 
 == Just burn the ".IMG" file attached to this release to an 8GB+ SD card. Boot your Raspberry Pi with the SD card and it will automatically boot into its AP Host (broadcast) mode with an SSID based on a unique id (the last four of your Pi's serial number). No input devices or displays necessary. Otherwise this is a base install of the current Raspbian Stretch, up to date as of the date of
 this release.
-
-
 
 ### SCRIPT-BASED INSTALLATION INSTRUCTIONS:
 
@@ -85,3 +80,20 @@ port when navigating to the page.
    **sudo python3 /usr/lib/raspiwifi/uninstall.python3**
 
    You can also run it from the "libs/" directory from a fresh clone if you've installed from a previous version and don't have /usr/lib/raspiwifi/uninstall.py available.
+   
+   
+## Trouble shooting
+Here are some possible issues you may have:
+1. **Sometimes even after you run "initial_setup.py" and have configured the wifi, the Pi just stays at "Host mode":** <br>
+   == The host mode related files are not removed correctly, probably because unknown bugs in "app.py" file. Check the following files to fix:<br>
+      (1) "/etc/raspiwifi/host_mode", if this is removed or not.<br>
+      (2) "/etc/cron.raspiwifi/", go to this directory, check if "aphost_bootstrapper" is deleted or not.<br>
+      (3) "/etc/dhcpcd.conf", look at this file, make sure the "static IP" for wlan0 has been deleted.<br>
+2. **Sometimes after you run "uninstall.py" and reboot the Pi, it losts the wifi connection, says "can't communicate with wpa_supplicant.conf file":**<br>
+   == Run "uninstall.py" again (maybe more times needed) and manually check if "/etc/wpa_supplicant/wpa_supplicant.conf" is correctly modified.<br> 
+3. **How to easily see the webpage without going through the whole process?**<br> 
+   == Run "mv /usr/lib/raspiwifi/reset_device/static_files/raspiwifi.conf /etc/raspiwifi" first to meet the basic requirement of "app.py" (which is the         backend controls the webpage). Then, run "app.py" under the corresponding directory and open the browser to see it.<br> 
+4. **For Other IP or modes related bugs:**<br>
+   == Check "/etc/dhcpcd.conf", see if it is corresponding to the current mode. The original file should only be: "interface wlan0", no static IP.<br>
+5. **Make sure each time after you commit the code to Github, run "uninstall.py" then "initial_setup.py" to update the changes.**
+
