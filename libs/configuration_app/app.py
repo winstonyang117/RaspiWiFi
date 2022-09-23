@@ -31,7 +31,11 @@ def wpa_settings():
 def save_credentials():
     ssid = request.form['ssid']
     wifi_key = request.form['wifi_key']
-    username = request.form['username']
+    check = request.form.get('UsernameCheck')
+    if check == '1':
+        username = request.form['username']
+    else: 
+        username = 'none'
 
     create_wpa_supplicant(ssid, username, wifi_key)
     
@@ -116,23 +120,7 @@ def create_wpa_supplicant(ssid, username, wifi_key):
     temp_conf_file.write('update_config=1\n')
     temp_conf_file.write('\n')
 
-    # change to a new wifi (PAWS-Secure is default) in our campus 
-    # ssid is actually the user name 
-    if ssid == 'PAWS-Secure':
-        temp_conf_file.write('network={\n')
-        temp_conf_file.write('	ssid="PAWS-Secure"\n')
-        temp_conf_file.write('     eap=PEAP\n')
-        temp_conf_file.write('     key_mgmt=WPA-EAP\n')
-        temp_conf_file.write('     phase2="auth=MSCHAPV2"\n')
-        temp_conf_file.write('	identity="' + username + '"\n')
-        if wifi_key == '':
-            temp_conf_file.write('	key_mgmt=NONE\n')
-        else:
-            temp_conf_file.write('	password="' + wifi_key + '"\n')
-            temp_conf_file.write('	priority=2\n')
-        temp_conf_file.write('	}\n\n')
-    
-    elif username == 'none': 
+    if username == 'none':
         temp_conf_file.write('network={\n')
         temp_conf_file.write('	ssid="' + ssid + '"\n')
         if wifi_key == '':
@@ -141,6 +129,44 @@ def create_wpa_supplicant(ssid, username, wifi_key):
             temp_conf_file.write('	psk="' + wifi_key + '"\n')
             temp_conf_file.write('	priority=2\n')
         temp_conf_file.write('	}\n\n')
+    else: 
+        temp_conf_file.write('network={\n')
+        temp_conf_file.write('	ssid="' + ssid + '"\n')
+        temp_conf_file.write('     eap=PEAP\n')
+        temp_conf_file.write('     key_mgmt=WPA-EAP\n')          # here we assume edu wifi networks use "WPA-EAP" for key mgmt
+        temp_conf_file.write('     phase2="auth=MSCHAPV2"\n')
+        temp_conf_file.write('	identity="' + username + '"\n')
+        if wifi_key == '':
+            temp_conf_file.write('	key_mgmt=NONE\n')
+        else:
+            temp_conf_file.write('	password="' + wifi_key + '"\n')
+            temp_conf_file.write('	priority=2\n')
+        temp_conf_file.write('	}\n\n')
+        
+    # change to a new wifi (PAWS-Secure is default) in our campus 
+    # if ssid == 'PAWS-Secure':
+    #     temp_conf_file.write('network={\n')
+    #     temp_conf_file.write('	ssid="PAWS-Secure"\n')
+    #     temp_conf_file.write('     eap=PEAP\n')
+    #     temp_conf_file.write('     key_mgmt=WPA-EAP\n')
+    #     temp_conf_file.write('     phase2="auth=MSCHAPV2"\n')
+    #     temp_conf_file.write('	identity="' + username + '"\n')
+    #     if wifi_key == '':
+    #         temp_conf_file.write('	key_mgmt=NONE\n')
+    #     else:
+    #         temp_conf_file.write('	password="' + wifi_key + '"\n')
+    #         temp_conf_file.write('	priority=2\n')
+    #     temp_conf_file.write('	}\n\n')
+    
+    # elif username == 'none': 
+    #     temp_conf_file.write('network={\n')
+    #     temp_conf_file.write('	ssid="' + ssid + '"\n')
+    #     if wifi_key == '':
+    #         temp_conf_file.write('	key_mgmt=NONE\n')
+    #     else:
+    #         temp_conf_file.write('	psk="' + wifi_key + '"\n')
+    #         temp_conf_file.write('	priority=2\n')
+    #     temp_conf_file.write('	}\n\n')
 
 
     # use "sensorweb" as a back up wifi
@@ -159,7 +185,7 @@ def create_wpa_supplicant(ssid, username, wifi_key):
 
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
-    os.system('rm /etc/cron.raspiwifi/')
+    os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')      ############################   if don't add "aphost_bootstrapper", it will have bugs. Because sometimes there are 2 files under "cron.raspiwifi". 
     os.system('cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/')
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
     os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
