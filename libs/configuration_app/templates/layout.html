@@ -11,11 +11,22 @@
   <script>
     function enable_text(status)
     {
-    //alert(status);
       status=!status;	
-      document.f1.username.disabled = status;
+      document.wifi.username.disabled = status;
     }
   </script>
+  <script>
+    function myConfirmation(){
+    var getConfirm = confirm("Have you double checked the SSID, Username and password?");
+    if(getConfirm == true){
+    alert("Your device will restart in 5s...Then you will get connected.");
+    return true;
+    }else{
+    alert("Please try it again");
+    return false;
+    }
+    }
+</script>
   <body>
     {% block body %}
     {% endblock %}

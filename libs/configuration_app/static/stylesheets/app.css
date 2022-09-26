@@ -53,6 +53,13 @@ div#wpaStatus a{
     color: #fff;
 }
 
+
+div#container {
+    font-size:1.9rem;
+}
+
+
+label[for=username],
 label[for=ssid],
 label[for=wifi_key]{
     font-size:1.9rem;
@@ -61,7 +68,7 @@ label[for=wifi_key]{
 /* Select
 ---------------------------------------------------------*/
 
-li label {
+li.label {
     display:inline-block;
     margin: 0.5em 0;
     padding: 0.5em 0;
@@ -129,6 +136,11 @@ select.wifiNetworkInputs {
 
 div#wpaCredentialsForm{
     margin: 60px 0 0 0;
+}
+
+.usernamecheckbox{
+    height: 20px;
+    width: 20px;
 }
 
 .wpaEnabledCheckbox{
