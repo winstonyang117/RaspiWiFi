@@ -92,7 +92,9 @@ Here are some possible issues you may have:
 2. **Sometimes after you run "uninstall.py" and reboot the Pi, it losts the wifi connection, says "can't communicate with wpa_supplicant.conf file":**<br>
    == Run "uninstall.py" again (maybe more times needed) and manually check if "/etc/wpa_supplicant/wpa_supplicant.conf" is correctly modified.<br> 
 3. **How to easily see the webpage without going through the whole process?**<br> 
-   == Run "mv /usr/lib/raspiwifi/reset_device/static_files/raspiwifi.conf /etc/raspiwifi" first to meet the basic requirement of "app.py" (which is the         backend controls the webpage). Then, run "app.py" under the corresponding directory and open the browser to see it.<br> 
+   == Run "uninstall.py" first.<br> 
+   == Then "cd /etc" -> "sudo mkdir raspiwifi" -> "cd raspiwifi/" -> "touch raspiwifi.conf" (Generate this file first)<br> 
+   == Run "sudo cp /home/pi/RaspiWiFi/libs/reset_device/static_files/raspiwifi.conf /etc/raspiwifi/raspiwifi.conf". Then, run "app.py" under the               corresponding directory and open the browser to see it.<br> 
 4. **For Other IP or modes related bugs:**<br>
    == Check "/etc/dhcpcd.conf", see if it is corresponding to the current mode. The original file should only be: "interface wlan0", no static IP.<br>
 5. **Make sure each time after you commit the code to Github, run "uninstall.py" then "initial_setup.py" to update the changes.**
