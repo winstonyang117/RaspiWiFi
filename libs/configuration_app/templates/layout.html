@@ -15,18 +15,24 @@
       document.wifi.username.disabled = status;
     }
   </script>
+
   <script>
     function myConfirmation(){
-    var getConfirm = confirm("Have you double checked the SSID, Username and password?");
-    if(getConfirm == true){
-    alert("Your device will restart in 5s...Then you will get connected.");
-    return true;
-    }else{
-    alert("Please try it again");
-    return false;
+      var ssid = document.getElementById("ssid").value;
+      var username = document.getElementById("username").value;   
+      var wifi_key = document.getElementById("wifi_key").value; 
+      var getConfirm = confirm('Have you double checked the ssid:[' + ssid + '] with password:[' + wifi_key + '] and the username:[' + username + ']');
+      if(getConfirm == true){
+        alert("Your device will restart in 5s...Then you will get connected.");
+        return true;
+        }else{
+        alert("Please try it again");
+        return false;
+      }
     }
-    }
-</script>
+  </script>
+
+  
   <body>
     {% block body %}
     {% endblock %}

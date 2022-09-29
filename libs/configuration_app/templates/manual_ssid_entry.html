@@ -5,19 +5,19 @@
     <h1>WiFi Setup</h1>
     <div class="wifiIcon"></div>
 
-    <form name=wifi action="{{ url_for('save_credentials') }}" method=post onsubmit='return myConfirmation(this);'>
+    <form name=wifi action="{{ url_for('save_credentials') }}" method=post onsubmit="return myConfirmation(this);">
       <ul>
   
         <li><label for="ssid">Enter your network SSID:</label></li>
-        <li><input type="text" name="ssid", class="wifiNetworkInputs"></li><br />
+        <li><input type="text" name="ssid" id="ssid", class="wifiNetworkInputs"></li><br />
 
         <div id="container"><input type="checkbox" name="UsernameCheck" value="1" onclick="enable_text(this.checked)">Check if username needed</div>
         
         <li><label for="username">Enter your username:</label></li>
-        <li><input type=text name="username", class="wifiNetworkInputs" disabled><li><br />
+        <li><input type=text name="username" id="username", class="wifiNetworkInputs" disabled><li><br />
 
         <li><label for="wifi_key">Your Wifi password:</label></li>
-        <li><input type="text" name="wifi_key", class="wifiNetworkInputs"></li>
+        <li><input type="text" name="wifi_key" id="wifi_key", class="wifiNetworkInputs"></li>
 
         <input type="submit", class="wifiConnectButton">
       </ul>
