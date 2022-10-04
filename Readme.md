@@ -1,8 +1,8 @@
 # RaspiWiFi
 
 RaspiWiFi is a program to headlessly configure a Raspberry Pi's WiFi connection using using any other WiFi-enabled device (much like the way
-a Chromecast or similar device can be configured).
-
+a Chromecast or similar device can be configured). It is relatively easy to start with the instruction below, **but you are strongly recommended to carefully review the "Trouble shooting" part just in case.** 
+ 
 It can also be used as a method to connect wirelessly point-to-point with your Pi when a network is not available or you do not want to connect to one. Just leave it in Configuration Mode, connect to the "RaspiWiFi[xxxx] Setup" access point. The Pi will be addressable at 10.0.0.1 **(static IP address)** using all the normal methods you might use while connected through a network.
 
 RaspiWiFi has been tested with the Raspberry Pi B+, Raspberry Pi 3, and Raspberry Pi Zero W.
@@ -97,5 +97,16 @@ Here are some possible issues you may have:
    == Run "sudo cp /home/pi/RaspiWiFi/libs/reset_device/static_files/raspiwifi.conf /etc/raspiwifi/raspiwifi.conf". Then, run "app.py" under the               corresponding directory and open the browser to see it.<br> 
 4. **For Other IP or modes related bugs:**<br>
    == Check "/etc/dhcpcd.conf", see if it is corresponding to the current mode. The original file should only be: "interface wlan0", no static IP.<br>
-5. **Make sure each time after you commit the code to Github, run "uninstall.py" then "initial_setup.py" to update the changes.**
+5. **Make sure each time after you commit the code to Github, run "uninstall.py" then "initial_setup.py" to update the changes.**<br>
+6. ### All the "install" & "uninstall" process MUST be done under the original folder "RaspiWifi". Even though you use absolute path, you will still get severe bugs. (Refer to line 17 in "setup_lib.py")<br>
+7. When running **"initial_setup.py"**, **MAKE SURE** the following files exist **FIRST** to successfully continue the initail setup process!!<br>
+   == /etc/wpa../wpa... => wpa.original<br> 
+   == /etc/dnsmasq.conf => dnsmasq.conf.original<br>
+   == cp ..from repo/dnsmasq.conf => /etc/dnsmasq.conf<br>
+   == /etc/dhcpcd.conf => dhcpcd.conf.original<br> 
+   == if wpa_enable_choice == N:<br>
+      ...from repo/hostpad.conf.nowpa => /etc/hostapd/hostapd.conf<br>
+   If all of the files above are correctly generated, then the corresponding process "uninstall" should be good to go through.
+  
+
 
